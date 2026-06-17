@@ -1,38 +1,63 @@
 <!DOCTYPE html><html lang="he" dir="rtl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><title>וולטה — דשבורד IT (מצרפי)</title>
+<meta name="robots" content="noindex,nofollow"><title>וולטה — דשבורד IT</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script><style>
-:root{--bg:#0f172a;--card:#1e293b;--c2:#26334a;--txt:#e2e8f0;--mut:#94a3b8;--acc:#38bdf8}
+:root{--bg:#0f172a;--card:#1e293b;--txt:#e2e8f0;--mut:#94a3b8;--acc:#38bdf8}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:"Segoe UI",Arial,sans-serif;padding:20px}
-h1{font-size:23px;margin:0 0 2px}h2{font-size:15px;margin:0 0 12px;color:var(--acc)}
+h1{font-size:23px;margin:0 0 2px}h2{font-size:14px;margin:0 0 10px;color:var(--acc)}
 .sub{color:var(--mut);font-size:13px;margin-bottom:16px}.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-inline-start:6px;animation:p 1.6s infinite}@keyframes p{50%{opacity:.3}}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:10px;margin-bottom:18px}
-.kpi{background:var(--card);border:1px solid #2b3a55;border-radius:13px;padding:13px 15px}.kpi .n{font-size:27px;font-weight:700}.kpi .l{color:var(--mut);font-size:12px;margin-top:5px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:15px;margin-bottom:18px}
-.card{background:var(--card);border:1px solid #2b3a55;border-radius:13px;padding:15px}.wide{grid-column:1/-1}canvas{max-height:290px}
-ul.list{margin:0;padding-inline-start:18px}ul.list li{margin-bottom:9px;line-height:1.55}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px}
+.kpi{background:var(--card);border:1px solid #2b3a55;border-radius:13px;padding:13px 15px}.kpi .n{font-size:25px;font-weight:700}.kpi .l{color:var(--mut);font-size:12px;margin-top:5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid #2b3a55;border-radius:13px;padding:14px}.wide{grid-column:1/-1}canvas{max-height:280px}
+ul.list{margin:0;padding-inline-start:18px}ul.list li{margin-bottom:8px;line-height:1.5}
 .foot{color:var(--mut);font-size:12px;margin-top:14px;text-align:center}.tag{display:inline-block;background:rgba(56,189,248,.12);color:#7dd3fc;border-radius:6px;padding:2px 8px;font-size:11px;margin-inline-start:8px}
+.sect{font-size:13px;color:var(--mut);margin:18px 0 8px;border-top:1px solid #2b3a55;padding-top:12px}
 </style></head><body>
 <h1>וולטה סולאר — דשבורד IT <span class="live"></span><span class="tag">מצרפי · ללא נתונים אישיים</span></h1>
 <div class="sub" id="sub"></div>
 <div class="kpis" id="kpis"></div>
+<div class="sect">📊 היקף ועומס</div>
 <div class="grid">
   <div class="card"><h2>נפח הודעות IT לחודש</h2><canvas id="cMon"></canvas></div>
+  <div class="card"><h2>נכנס מול תגובות לפי חודש</h2><canvas id="cFlow"></canvas></div>
   <div class="card"><h2>לפי מערכת</h2><canvas id="cSys"></canvas></div>
+  <div class="card"><h2>מגמת מערכות לאורך זמן</h2><canvas id="cTrend"></canvas></div>
+</div>
+<div class="sect">⏱️ טיפול ותזמון</div>
+<div class="grid">
+  <div class="card"><h2>זמן תגובה חציוני לפי מערכת (דק׳)</h2><canvas id="cResp"></canvas></div>
+  <div class="card"><h2>טיפולים מול דחיפות לפי חודש</h2><canvas id="cResUrg"></canvas></div>
+  <div class="card"><h2>פניות לפי שעה ביום</h2><canvas id="cHour"></canvas></div>
+  <div class="card"><h2>פניות לפי יום בשבוע</h2><canvas id="cDow"></canvas></div>
+</div>
+<div class="sect">🔎 פירוט</div>
+<div class="grid">
   <div class="card"><h2>מונחים נפוצים</h2><canvas id="cKw"></canvas></div>
   <div class="card"><h2>לפי ערוץ (קבוצות / DM)</h2><canvas id="cChan"></canvas></div>
 </div>
 <div class="card wide"><h2>תובנות והמלצות</h2><ul class="list" id="ins"></ul></div>
 <div class="foot" id="ft"></div>
 <script>
-const D={"live": {"byMonth": [["2025-12", 99], ["2026-01", 233], ["2026-02", 203], ["2026-03", 359], ["2026-04", 340], ["2026-05", 603], ["2026-06", 493]], "bySystem": [["Hardware", 617], ["Access / Permissions", 598], ["Zoho", 290], ["Identity / Auth", 279], ["Errors / Faults", 218], ["Google Drive / Sheets", 183], ["OutSystems", 146], ["Podio", 106], ["Make / Integration", 73], ["Security", 44], ["Priority ERP", 29], ["Telephony / CX", 22], ["Google Ads", 12]], "byChannel": [["פניות אישיות (DM)", 1193], ["קבוצה אחרת", 427], ["Innovation Support - Ops", 199], ["Volta New Customers וולטה", 139], ["Innovation Support - Business", 107], ["Innovation Support - HR", 84], ["Innovation Support - Field", 70], ["Volta Operations", 24], ["Volta website", 21], ["Volta - מקדמות", 21]], "byKeyword": [["גישה", 462], ["מחשב", 401], ["זוהו", 155], ["zoho", 141], ["outsystems", 124], ["מסך", 113], ["אימות", 82], ["פודיו", 81], ["תקלה", 76], ["דרייב", 67], ["סיסמה", 62], ["הרשאות", 61], ["להתחבר", 61], ["סוללה", 60], ["drive", 50]], "total": 2330, "inbound": 1684, "mine": 646, "updated": "2026-06-17 15:44", "rangeDays": 180}, "insights": ["צי המחשבים הוא כאב מרכזי: מחשבים ניידים בני 5–6 שנים שמקרטעים/קורסים. מומלצת תוכנית רענון צי מתוקצבת + מלאי מחשבים זמין לגיוסים חדשים, במקום פירמוטים חוזרים.", "בקשות הרשאה (Drive/דשבורדים/אדמין) חוזרות שוב ושוב, רבות לעובדים חדשים. מומלץ onboarding/offboarding אוטומטי מבוסס קבוצות הרשאה (security groups) לפי תפקיד.", "אימות וזהות (2FA תקוע, איפוסי סיסמה, מעבר ל-Google SSO) הם נתח גדול. מומלץ SSO אחיד על כל המערכות + פורטל self-service לאיפוס סיסמה/2FA.", "Zoho היא המערכת הכי עמוסה (סנכרון נכסים, טפסים, סטטוסים, OneAuth). מומלץ אחראי-מערכת ייעודי + QA לפני עליית טפסים + naming convention שמשייך כל טופס ללקוח.", "עומס התמיכה מרוכז בערוצי Innovation Support. מומלצת מערכת כרטוס (ticketing) רשמית במקום WhatsApp — למעקב, מניעת כפילויות ומדידת SLA.", "ריכוז ניהול מערכות קריטיות בידי אדם יוצר נקודת כשל יחידה. מומלץ אדמין משני/break-glass ותיעוד הרשאות קריטיות.", "שני אירועי אבטחה תוך ~3 חודשים מצדיקים EDR/אנטי-וירוס מנוהל, MFA חזק והדרכת מודעות לעובדים."]},L=D.live,P=['#38bdf8','#a855f7','#f59e0b','#22c55e','#ef4444','#14b8a6','#eab308','#fb7185','#60a5fa','#34d399','#c084fc','#f472b6','#fbbf24'];
+const D={"live": {"byMonth": [["2025-12", 99], ["2026-01", 233], ["2026-02", 203], ["2026-03", 359], ["2026-04", 340], ["2026-05", 603], ["2026-06", 496]], "bySystem": [["Hardware", 620], ["Access / Permissions", 600], ["Zoho", 290], ["Identity / Auth", 279], ["Errors / Faults", 218], ["Google Drive / Sheets", 183], ["OutSystems", 146], ["Podio", 106], ["Make / Integration", 73], ["Security", 44], ["Priority ERP", 29], ["Telephony / CX", 22], ["Google Ads", 12]], "byChannel": [["פניות אישיות (DM)", 1194], ["קבוצה אחרת", 427], ["Innovation Support - Ops", 199], ["Volta New Customers וולטה", 140], ["Innovation Support - Business", 107], ["Innovation Support - HR", 84], ["Innovation Support - Field", 70], ["Volta Operations", 24], ["Volta - מקדמות", 22], ["Volta website", 21]], "byKeyword": [["גישה", 464], ["מחשב", 402], ["זוהו", 155], ["zoho", 141], ["outsystems", 124], ["מסך", 113], ["אימות", 82], ["פודיו", 81], ["תקלה", 76], ["דרייב", 67], ["סיסמה", 62], ["סוללה", 62], ["להתחבר", 61], ["הרשאות", 61], ["drive", 50]], "byHour": [["00", 13], ["01", 10], ["02", 0], ["03", 0], ["04", 0], ["05", 2], ["06", 9], ["07", 18], ["08", 71], ["09", 175], ["10", 213], ["11", 250], ["12", 253], ["13", 199], ["14", 184], ["15", 215], ["16", 165], ["17", 142], ["18", 96], ["19", 90], ["20", 73], ["21", 65], ["22", 54], ["23", 36]], "byDow": [["ראשון", 513], ["שני", 445], ["שלישי", 479], ["רביעי", 358], ["חמישי", 357], ["שישי", 97], ["שבת", 84]], "flow": {"months": ["2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06"], "inbound": [60, 146, 143, 275, 253, 447, 362], "mine": [39, 87, 60, 84, 87, 156, 134]}, "sysTrend": {"months": ["2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06"], "series": [{"name": "Hardware", "data": [40, 49, 68, 71, 90, 99, 203]}, {"name": "Access / Permissions", "data": [18, 47, 37, 82, 68, 221, 127]}, {"name": "Zoho", "data": [12, 38, 20, 42, 58, 73, 47]}, {"name": "Identity / Auth", "data": [10, 27, 30, 66, 43, 68, 35]}, {"name": "Errors / Faults", "data": [11, 36, 16, 31, 34, 53, 37]}, {"name": "Google Drive / Sheets", "data": [12, 18, 22, 33, 24, 39, 35]}]}, "respBySys": [["Telephony / CX", 20.6, 4], ["Priority ERP", 8.3, 4], ["Security", 4.8, 16], ["Google Drive / Sheets", 4.7, 68], ["Zoho", 2.4, 117], ["Make / Integration", 2.3, 14], ["OutSystems", 1.9, 23], ["Podio", 1.7, 33], ["Access / Permissions", 1.6, 138], ["Hardware", 1.2, 164], ["Google Ads", 1.1, 7], ["Identity / Auth", 1.0, 50], ["Errors / Faults", 1.0, 40]], "respMedian": 1.6, "urgByMonth": [["2025-12", 1], ["2026-01", 6], ["2026-02", 5], ["2026-03", 1], ["2026-04", 0], ["2026-05", 6], ["2026-06", 3]], "resByMonth": [["2025-12", 3], ["2026-01", 22], ["2026-02", 20], ["2026-03", 14], ["2026-04", 15], ["2026-05", 29], ["2026-06", 18]], "total": 2333, "inbound": 1686, "mine": 647, "urgent": 22, "updated": "2026-06-17 16:07", "rangeDays": 180}, "insights": ["צי המחשבים כאב מרכזי: ניידים בני 5–6 שנים שמקרטעים/קורסים. מומלצת תוכנית רענון צי מתוקצבת + מלאי זמין לגיוסים, במקום פירמוטים חוזרים.", "בקשות הרשאה (Drive/דשבורדים/אדמין) חוזרות, רבות לעובדים חדשים. מומלץ onboarding/offboarding אוטומטי מבוסס קבוצות הרשאה לפי תפקיד.", "אימות/זהות (2FA, איפוסי סיסמה, מעבר ל-Google SSO) נתח גדול. מומלץ SSO אחיד + פורטל self-service לאיפוס סיסמה/2FA.", "Zoho המערכת הכי עמוסה (סנכרון נכסים, טפסים, סטטוסים, OneAuth). מומלץ אחראי-מערכת ייעודי + QA לטפסים + naming convention ללקוח.", "עומס מרוכז בערוצי Innovation Support. מומלצת מערכת כרטוס (ticketing) רשמית במקום WhatsApp — למעקב, SLA ומניעת כפילויות.", "ניהול מערכות קריטיות בידי אדם = נקודת כשל יחידה. מומלץ אדמין משני/break-glass ותיעוד הרשאות קריטיות."]},L=D.live;
+const P=['#38bdf8','#a855f7','#f59e0b','#22c55e','#ef4444','#14b8a6','#eab308','#fb7185','#60a5fa','#34d399','#c084fc','#f472b6','#fbbf24'];
 const $=s=>document.querySelector(s),E=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-$('#sub').innerHTML=`עודכן: <b>${L.updated}</b> · ${L.rangeDays} יום אחרונים · ${L.total} הודעות בנושא IT (${L.inbound} נכנסות / ${L.mine} שלי)`;
-const k=[[L.total,'הודעות IT'],[L.inbound,'פניות נכנסות'],[L.bySystem.length,'מערכות'],[L.byMonth.length,'חודשים'],[L.byChannel.length,'ערוצים']];
-$('#kpis').innerHTML=k.map(([n,l])=>`<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
-function bar(id,pr,h){new Chart(document.getElementById(id),{type:'bar',data:{labels:pr.map(p=>p[0]),datasets:[{data:pr.map(p=>p[1]),backgroundColor:pr.map((p,i)=>P[i%P.length]),borderRadius:6}]},options:{indexAxis:h?'y':'x',plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'#243049'}},y:{ticks:{color:'#cbd5e1'},grid:{color:'#243049'}}}}});}
-new Chart(document.getElementById('cMon'),{type:'line',data:{labels:L.byMonth.map(p=>p[0]),datasets:[{data:L.byMonth.map(p=>p[1]),borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.18)',fill:true,tension:.3,pointRadius:4}]},options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'#243049'}},y:{ticks:{color:'#94a3b8'},grid:{color:'#243049'}}}}});
-bar('cSys',L.bySystem,true);bar('cKw',L.byKeyword,true);bar('cChan',L.byChannel,true);
+const AX={x:{ticks:{color:'#94a3b8'},grid:{color:'#243049'}},y:{ticks:{color:'#cbd5e1'},grid:{color:'#243049'}}};
+$('#sub').innerHTML=`עודכן: <b>${L.updated}</b> · ${L.rangeDays} יום · ${L.total} הודעות IT (${L.inbound} נכנסות / ${L.mine} שלי)`;
+const K=[[L.total,'הודעות IT'],[L.inbound,'פניות נכנסות'],[L.respMedian+'′','זמן תגובה חציוני'],[L.urgent,'אזכורי דחיפות'],[L.bySystem.length,'מערכות']];
+$('#kpis').innerHTML=K.map(([n,l])=>`<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
+function bar(id,pr,h,clr){new Chart(document.getElementById(id),{type:'bar',data:{labels:pr.map(p=>p[0]),datasets:[{data:pr.map(p=>p[1]),backgroundColor:clr||pr.map((p,i)=>P[i%P.length]),borderRadius:5}]},options:{indexAxis:h?'y':'x',plugins:{legend:{display:false}},scales:AX}});}
+function line(id,labels,data,clr){new Chart(document.getElementById(id),{type:'line',data:{labels,datasets:[{data,borderColor:clr,backgroundColor:clr+'30',fill:true,tension:.3,pointRadius:3}]},options:{plugins:{legend:{display:false}},scales:AX}});}
+line('cMon',L.byMonth.map(p=>p[0]),L.byMonth.map(p=>p[1]),'#38bdf8');
+new Chart(document.getElementById('cFlow'),{type:'bar',data:{labels:L.flow.months,datasets:[{label:'נכנסות',data:L.flow.inbound,backgroundColor:'#f59e0b',borderRadius:5},{label:'תגובות שלי',data:L.flow.mine,backgroundColor:'#22c55e',borderRadius:5}]},options:{plugins:{legend:{labels:{color:'#cbd5e1'}}},scales:AX}});
+bar('cSys',L.bySystem,true);
+new Chart(document.getElementById('cTrend'),{type:'bar',data:{labels:L.sysTrend.months,datasets:L.sysTrend.series.map((s,i)=>({label:s.name,data:s.data,backgroundColor:P[i%P.length]}))},options:{plugins:{legend:{labels:{color:'#cbd5e1',boxWidth:12,font:{size:10}}}},scales:{x:{stacked:true,...AX.x},y:{stacked:true,...AX.y}}}});
+bar('cResp',L.respBySys.map(r=>[r[0],r[1]]),true,'#fb7185');
+new Chart(document.getElementById('cResUrg'),{type:'line',data:{labels:L.resByMonth.map(p=>p[0]),datasets:[{label:'טיפולים',data:L.resByMonth.map(p=>p[1]),borderColor:'#22c55e',backgroundColor:'#22c55e30',fill:true,tension:.3},{label:'דחיפות',data:L.urgByMonth.map(p=>p[1]),borderColor:'#ef4444',backgroundColor:'#ef444430',fill:true,tension:.3}]},options:{plugins:{legend:{labels:{color:'#cbd5e1'}}},scales:AX}});
+bar('cHour',L.byHour,false,'#60a5fa');
+bar('cDow',L.byDow,false,'#a855f7');
+bar('cKw',L.byKeyword,true);
+bar('cChan',L.byChannel,true);
 $('#ins').innerHTML=D.insights.map(x=>`<li>${E(x)}</li>`).join('');
-$('#ft').innerHTML=`מתעדכן אוטומטית כל לילה מה-DB המקומי · נתונים מצרפיים בלבד (ללא שמות/תוכן הודעות) · עודכן ${L.updated}`;
+$('#ft').innerHTML=`מתעדכן אוטומטית כל לילה מה-DB המקומי · נתונים מצרפיים בלבד (ללא שמות/תוכן) · זמן תגובה=פער חציוני בין פנייה נכנסת לתשובה הראשונה (עד 8ש׳) · עודכן ${L.updated}`;
 </script></body></html>
